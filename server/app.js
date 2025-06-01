@@ -48,11 +48,12 @@ app.post('/upload/pdf', upload.single('pdf'), async (req, res) => {
       path: req.file.path,
     }
   );
+  console.log("file uploaded")
   return res.json({ message: 'uploaded' });
 });
 
 app.get('/chat', async (req, res) => {
-  const userQuery = 'What is LongRAG';
+  const userQuery = req.query.message;
 
   const embeddings = new GoogleGenerativeAIEmbeddings({
     apiKey: GOOGLE_API_KEY,
