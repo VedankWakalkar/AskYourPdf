@@ -1,1 +1,135 @@
 #ASKYOURPDF
+# 📄 PDF-RAG Platform (Gemini + Next.js + Qdrant + Clerk)
+
+A full-stack AI-powered PDF processing platform that allows users to upload PDF documents, generate semantic embeddings using **Gemini-1.5-Flash**, and store them in a **Qdrant** vector database. Users authenticate securely using **Clerk**, and all uploads are queued and processed using **BullMQ**.
+
+---
+
+## 🔧 Tech Stack
+
+### 🧠 Backend
+- **Node.js**, **Express**, **BullMQ** – PDF processing and job queueing
+- **LangChain.js** – For document parsing and vector store support
+- **Gemini 1.5 Flash (Google AI)** – Embedding model
+- **Qdrant** – Vector database for semantic search
+- **Redis** – Queue broker
+
+### 🌐 Frontend
+- **Next.js 14** – React framework
+- **Clerk** – User authentication and session management
+- **Tailwind CSS** – UI styling
+- **Axios** – For API communication
+
+---
+
+## 🚀 Features
+
+- ✅ Secure PDF upload with Clerk-authenticated users
+- 🤖 Background PDF parsing and embedding generation via Gemini
+- 🧠 Semantic vector storage in Qdrant
+- 📦 Worker queue using BullMQ with Redis
+- 🎯 Clean and responsive UI with status feedback
+
+---
+
+## 🖼️ System Architecture
+
+Client (Next.js + Clerk)
+|
+| Authenticated Upload Request
+v
+Express API Server (PDF Upload)
+|
+| Push job to Redis Queue (BullMQ)
+v
+PDF Processor Worker (LangChain + Gemini)
+|
+| Embeds -> Qdrant Vector Store
+v
+Semantic Search / Retrieval (coming soon)
+
+
+---
+
+## 🛠️ Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/pdf-rag-app.git
+cd pdf-rag-app
+2. Backend Setup (/backend)
+Install dependencies
+bash
+cd backend
+npm install
+Create .env file
+env
+
+GEMINI_API_KEY=your_gemini_api_key
+Run Redis & Qdrant via Docker
+bash
+docker compose up -d
+Start Express server and worker
+bash
+node server.js         # Express API
+node worker.js         # BullMQ Worker
+3. Frontend Setup (/frontend)
+Install dependencies
+bash
+cd frontend
+npm install
+Set up Clerk
+Go to Clerk.dev, create an application, and copy your keys.
+
+Create .env.local for Clerk
+env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+Run the frontend
+bash
+npm run dev
+Visit http://localhost:3000 to test.
+
+📁 Project Structure
+bash
+pdf-rag-app/
+├── backend/
+│   ├── server.js       # Express API
+│   ├── worker.js       # BullMQ Worker using Gemini + LangChain
+│   └── uploads/        # Uploaded PDFs
+│
+├── frontend/
+│   ├── pages/
+│   ├── components/
+│   └── utils/
+│
+├── docker-compose.yml  # Redis + Qdrant setup
+└── README.md
+📄 Sample Job Payload
+json
+{
+  "filename": "somatosensory.pdf",
+  "destination": "uploads/",
+  "path": "uploads/1748692941700-275539632-somatosensory.pdf"
+}
+🔐 Auth Flow with Clerk
+Clerk handles registration, login, and session management
+
+All routes that require upload are protected via Clerk’s middleware
+
+User-specific uploads can be tracked in the future
+
+✅ Todo / Improvements
+ Add support for PDF chunking and metadata tagging
+
+ Implement semantic search across user uploads
+
+ Add admin dashboard to view job status
+
+ Deploy to Vercel (frontend) + Railway/Render (backend)
+
+👨‍💻 Author
+Vedank Wakalkar
