@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.23",
     "@google/generative-ai": "^0.24.1",
     "@langchain/community": "^0.3.45",
     "@langchain/core": "^0.3.57",

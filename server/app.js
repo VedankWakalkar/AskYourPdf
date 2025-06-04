@@ -22,6 +22,7 @@ const queue=new Queue('file-upload',{connection:{
     port:BULLMQ_PORT
 }})
 
+const MAX_REQUESTS_PER_USER= 10;
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -40,12 +41,13 @@ app.get('/', (req, res) => {
 });
 
 app.post('/upload/pdf', upload.single('pdf'), async (req, res) => {
+
   await queue.add(
     'file-ready',
     {
       filename: req.file.originalname,
       destination: req.file.destination,
-      path: req.file.path,
+      path: req.file.path
     }
   );
   console.log("file uploaded")
@@ -54,7 +56,6 @@ app.post('/upload/pdf', upload.single('pdf'), async (req, res) => {
 
 app.get('/chat', async (req, res) => {
   const userQuery = req.query.message;
-
   const embeddings = new GoogleGenerativeAIEmbeddings({
     apiKey: GOOGLE_API_KEY,
   });
@@ -63,7 +64,7 @@ app.get('/chat', async (req, res) => {
     embeddings,
     {
       url: QDRANT_URL,
-      collectionName: 'langchainjs-testing',
+      collectionName: `langchainjs-testing`,
     }
   );
 

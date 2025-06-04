@@ -26,15 +26,25 @@ const FileUploadComponent: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900 text-white shadow-2xl flex justify-center items-center p-4 rounded-lg border-white border-2">
-      <div
-        onClick={handleFileUploadButtonClick}
-        className="flex justify-center items-center flex-col"
-      >
-        <h3>Upload PDF File</h3>
-        <Upload />
+    <>
+      <div className="flex flex-col">
+        <div className="flex justify-center items-center flex-col mb-10">
+          <span className="text-2xl font-bold">PDF Document</span>
+          <span className="text-lg font-light">
+            Upload a PDF to start chatting with it
+          </span>
+        </div>
+        <div className="bg-muted/20 text-gray shadow-2xl flex justify-center items-center font-semibold p-4 rounded-lg border-white border-2 mt-10 h-40">
+          <div
+            onClick={handleFileUploadButtonClick}
+            className="flex justify-center items-center flex-col"
+          >
+            <Upload />
+            <h3>Click to Browse Files</h3>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
