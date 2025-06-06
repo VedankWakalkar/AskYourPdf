@@ -1,10 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@clerk/nextjs";
 import { ArrowRight, MessageSquare, Upload } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
 const Landing = () => {
+  const { user } = useUser();
   return (
     <div>
       <section className="px-4 py-24 md:py-32 bg-gradient-to-b from-muted/50 to-muted/10">
@@ -23,20 +25,34 @@ const Landing = () => {
               accurate answers powered by AI. Extract insights, find
               information, and save time.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-up">
-              <Link href="/dashboard/chat">
-                <Button size="lg" className="group">
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-              <Link href="/auth/sign-in">
-                <Button variant="outline" size="lg">
-                  Sign In
-                </Button>
-              </Link>
-            </div>
+            {user ? (
+              <>
+                <div className="flex flex-col sm:flex-row gap-4 animate-fade-up">
+                  <Link href="/dashboard/chat">
+                    <Button size="lg" className="group">
+                      Get Started
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Button>
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col sm:flex-row gap-4 animate-fade-up">
+                  <Link href="/dashboard/chat">
+                    <Button size="lg" className="group">
+                      Get Started
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Button>
+                  </Link>
+                  <Link href="/auth/sign-in">
+                    <Button variant="outline" size="lg">
+                      Sign In
+                    </Button>
+                  </Link>
+                </div>
+              </>
+            )}
 
             <div className="mt-12 relative w-full max-w-4xl overflow-hidden rounded-xl border bg-background shadow-xl animate-fade-up">
               <div className="aspect-[16/9] overflow-hidden rounded-t-xl bg-gradient-to-br from-primary/20 to-muted">

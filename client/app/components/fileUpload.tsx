@@ -1,8 +1,11 @@
 "use client";
 import * as React from "react";
 import { Upload } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 const FileUploadComponent: React.FC = () => {
+  const { user } = useUser();
+  const [uploadedFile, setUploadedFile] = React.useState<string | null>(null);
   const handleFileUploadButtonClick = () => {
     const el = document.createElement("input");
     el.setAttribute("type", "file");
@@ -17,8 +20,13 @@ const FileUploadComponent: React.FC = () => {
           await fetch("http://localhost:8080/upload/pdf", {
             method: "POST",
             body: formData,
+            headers: {
+              "X-User-ID": user?.id || "",
+            },
           });
           console.log("File uploaded");
+          console.log("userID: ", user?.id);
+          setUploadedFile(file.name);
         }
       }
     });
@@ -43,6 +51,11 @@ const FileUploadComponent: React.FC = () => {
             <h3>Click to Browse Files</h3>
           </div>
         </div>
+        {uploadedFile && (
+          <div className="mt-6 text-center text-green-600 font-medium">
+            ✅ Uploaded: {uploadedFile}
+          </div>
+        )}
       </div>
     </>
   );

@@ -3,7 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState, useRef, useEffect } from "react";
-import ChatBubble from "./chatbubble"; // Adjust path if needed
+import ChatBubble from "./chatbubble";
+import LoadingChat from "./emptyChatComponent";
+import { useUser } from "@clerk/nextjs";
 
 interface Doc {
   pageContent?: string;
@@ -22,17 +24,23 @@ interface ChatReplies {
 }
 
 const ChatComponent: React.FC = () => {
+  const { user } = useUser();
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<ChatReplies[]>([]);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-
+  const [chat, setChat] = useState(0);
   const handleChat = async () => {
+    setChat(1);
     setMessages((prev) => [...prev, { role: "user", content: message }]);
     setMessage("");
 
-    const res = await fetch(`http://localhost:8080/chat?message=${message}`);
+    const res = await fetch(`http://localhost:8080/chat?message=${message}`, {
+      headers: {
+        "X-User-ID": user?.id || "",
+      },
+    });
     const data = await res.json();
-
+    console.log(data);
     setMessages((prev) => [
       ...prev,
       {
@@ -53,14 +61,24 @@ const ChatComponent: React.FC = () => {
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Chat scroll container */}
-      <div
-        ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4 ml-8 border mr-8 mt-4 mb-22 border-black shadow-2xl rounded-xl"
-      > 
-        {messages.map((msg, index) => (
-          <ChatBubble key={index} role={msg.role} content={msg.content} />
-        ))}
-      </div>
+      {chat ? (
+        <>
+          <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto p-4 space-y-4 ml-8 border mr-8 mt-4 mb-22 border-black shadow-2xl rounded-xl"
+          >
+            {messages.map((msg, index) => (
+              <ChatBubble key={index} role={msg.role} content={msg.content} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <div>
+            <LoadingChat />
+          </div>
+        </>
+      )}
 
       {/* Input section */}
       <div className="flex justify-center items-center mt-1">
