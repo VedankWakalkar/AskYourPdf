@@ -10,7 +10,10 @@ const worker = new Worker(
     try {
       console.log(`Job:`, job.data);
       const data = job.data;
-
+      const userId=job.data.userId;
+      console.log(
+        "UserID: ",userId
+      )
       // Load PDF file
       const loader = new PDFLoader(data.path);
       const docs = await loader.load();
@@ -27,7 +30,7 @@ const worker = new Worker(
         embeddings,
         {
           url: QDRANT_URL,
-          collectionName: 'langchainjs-testing',
+          collectionName: `user-${userId}`,
         }
       );
 

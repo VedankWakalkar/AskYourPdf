@@ -9,6 +9,8 @@ import { QdrantVectorStore } from '@langchain/qdrant';
 import { GOOGLE_API_KEY } from "./config/env.js";
 import { QDRANT_URL } from "./config/env.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import connectToDatabase from "./database/mongoose.js";
+import uploadMiddleware from "./middleware/uploadPdf.middleware.js";
 
 const genAI=new GoogleGenerativeAI(GOOGLE_API_KEY)
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -40,21 +42,31 @@ app.get('/', (req, res) => {
   return res.json({ status: 'All Good!' });
 });
 
-app.post('/upload/pdf', upload.single('pdf'), async (req, res) => {
-
+app.post('/upload/pdf',upload.single('pdf'), uploadMiddleware,  async (req, res) => {
+  const userId = req.headers["x-user-id"]; 
+  if(!userId){
+    return res.status(403).json({
+      success:false,
+      message:"Forbidden"
+    })
+  }
   await queue.add(
     'file-ready',
     {
       filename: req.file.originalname,
       destination: req.file.destination,
-      path: req.file.path
+      path: req.file.path,
+      userId:userId
     }
   );
   console.log("file uploaded")
+  console.log("userId : ",userId)
   return res.json({ message: 'uploaded' });
 });
 
 app.get('/chat', async (req, res) => {
+  const userId= req.headers["x-user-id"];
+  console.log("userid : ",userId)
   const userQuery = req.query.message;
   const embeddings = new GoogleGenerativeAIEmbeddings({
     apiKey: GOOGLE_API_KEY,
@@ -64,7 +76,7 @@ app.get('/chat', async (req, res) => {
     embeddings,
     {
       url: QDRANT_URL,
-      collectionName: `langchainjs-testing`,
+      collectionName: `user-${userId}`,
     }
   );
 
@@ -93,6 +105,7 @@ Question: ${userQuery}
   });
 });
 
-app.listen(8080,()=>{
-    console.log("Server is Running")
+app.listen(8080,async ()=>{
+    console.log("Server is Running"),
+    await connectToDatabase()
 })

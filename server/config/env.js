@@ -13,5 +13,6 @@ export const {
   QDRANT_URL,
   HOST,
   NODE_ENV,
+  MONGO_URL,
   GOOGLE_API_KEY
 } = process.env;
