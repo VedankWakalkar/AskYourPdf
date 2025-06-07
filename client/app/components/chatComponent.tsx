@@ -34,7 +34,7 @@ const ChatComponent: React.FC = () => {
     setMessages((prev) => [...prev, { role: "user", content: message }]);
     setMessage("");
 
-    const res = await fetch(`http://localhost:8080/chat?message=${message}`, {
+    const res = await fetch(`http://localhost:5000/chat?message=${message}`, {
       headers: {
         "X-User-ID": user?.id || "",
       },

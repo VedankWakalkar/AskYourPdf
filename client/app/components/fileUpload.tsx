@@ -1,6 +1,5 @@
 "use client";
 import * as React from "react";
-import { Upload } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import PDFLimitReached from "./pdfLimitReached";
 import Folder from "@/Folder/Folder";
@@ -13,7 +12,7 @@ const FileUploadComponent: React.FC = () => {
     const fetchPDFCount = async () => {
       if (!user) return;
       try {
-        const res = await fetch("http://localhost:8080/pdf/limit", {
+        const res = await fetch("http://localhost:5000/pdf/limit", {
           method: "GET",
           headers: {
             "X-User-ID": user?.id || "",
@@ -40,7 +39,7 @@ const FileUploadComponent: React.FC = () => {
           const formData = new FormData();
           formData.append("pdf", file);
 
-          await fetch("http://localhost:8080/upload/pdf", {
+          await fetch("http://localhost:5000/upload/pdf", {
             method: "POST",
             body: formData,
             headers: {
