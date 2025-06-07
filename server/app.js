@@ -11,6 +11,7 @@ import { QDRANT_URL } from "./config/env.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import connectToDatabase from "./database/mongoose.js";
 import uploadMiddleware from "./middleware/uploadPdf.middleware.js";
+import UploadPDF from "./models/user.upload.js";
 
 const genAI=new GoogleGenerativeAI(GOOGLE_API_KEY)
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -41,6 +42,36 @@ const upload = multer({ storage: storage });
 app.get('/', (req, res) => {
   return res.json({ status: 'All Good!' });
 });
+
+app.get('/pdf/limit',async(req,res)=>{
+  const userId=req.headers["x-user-id"];
+  if(!userId){
+    return res.status(403).json({
+      success:false,
+      message:"FORBIDDEN"
+    })
+  }
+  try {
+    let isUserExist=await UploadPDF.findOne({userId});
+    if(!isUserExist){
+      isUserExist=await UploadPDF.create({
+        userId,
+        filenames:[]
+      })
+    }
+    const pdfCount = isUserExist.fileNames.length;
+      return res.status(200).json({
+        success:true,
+        count : pdfCount
+      })
+  } catch (error) {
+    console.log("Some Error occured : ",error)
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    });
+  }
+})
 
 app.post('/upload/pdf',upload.single('pdf'), uploadMiddleware,  async (req, res) => {
   const userId = req.headers["x-user-id"]; 
