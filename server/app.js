@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors'
 import multer from "multer";
 import { Queue } from 'bullmq';
-import { HOST } from "./config/env.js";
+import { PORT, REDIS_HOST } from "./config/env.js";
 import { BULLMQ_PORT } from "./config/env.js";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { QdrantVectorStore } from '@langchain/qdrant';
@@ -21,7 +21,7 @@ app.use(cors())
 app.use(express.json())
 
 const queue=new Queue('file-upload',{connection:{
-    host:HOST,
+    host:REDIS_HOST,
     port:BULLMQ_PORT
 }})
 
@@ -136,7 +136,7 @@ Question: ${userQuery}
   });
 });
 
-app.listen(8080,async ()=>{
-    console.log("Server is Running"),
+app.listen(PORT,async ()=>{
+    console.log(`Server running on port ${PORT}`),
     await connectToDatabase()
 })
