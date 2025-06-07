@@ -4,8 +4,6 @@ services:
   # Backend API server
   api:
     image: vedankiscool/askyourpdf-api:latest
-    build:
-      context: ./server
     container_name: askyourpdf-api
     ports:
       - "5000:5000"
@@ -22,8 +20,6 @@ services:
   # Worker running in same server image but different command
   worker:
     image: vedankiscool/askyourpdf-worker:latest
-    build:
-      context: ./server
     container_name: askyourpdf-worker
     env_file:
       - ./server/.env
@@ -38,8 +34,6 @@ services:
   # Frontend Next.js client
   client:
     image: vedankiscool/askyourpdf-client:latest
-    build:
-      context: ./client
     container_name: askyourpdf-client
     ports:
       - "3000:3000"
