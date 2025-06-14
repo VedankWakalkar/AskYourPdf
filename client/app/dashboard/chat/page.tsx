@@ -1,10 +1,10 @@
-'use client'
+"use client";
 import FileUploadComponent from "@/app/components/fileUpload";
 import ChatComponent from "@/app/components/chatComponent";
 import { useUser } from "@clerk/nextjs";
 import { SignIn } from "@clerk/clerk-react";
 
-const page = () => {
+const Page = () => {
   const user = useUser();
   return (
     <div>
@@ -29,4 +29,4 @@ const page = () => {
     </div>
   );
 };
-export default page;
+export default Page;

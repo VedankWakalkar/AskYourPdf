@@ -34,11 +34,14 @@ const ChatComponent: React.FC = () => {
     setMessages((prev) => [...prev, { role: "user", content: message }]);
     setMessage("");
 
-    const res = await fetch(`http://localhost:5000/chat?message=${message}`, {
-      headers: {
-        "X-User-ID": user?.id || "",
-      },
-    });
+    const res = await fetch(
+      `${process.env.BACKEND_URL}/chat?message=${message}`,
+      {
+        headers: {
+          "X-User-ID": user?.id || "",
+        },
+      }
+    );
     const data = await res.json();
     console.log(data);
     setMessages((prev) => [

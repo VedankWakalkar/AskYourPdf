@@ -12,7 +12,7 @@ const FileUploadComponent: React.FC = () => {
     const fetchPDFCount = async () => {
       if (!user) return;
       try {
-        const res = await fetch("http://localhost:5000/pdf/limit", {
+        const res = await fetch(`${process.env.BACKEND_URL}/pdf/limit`, {
           method: "GET",
           headers: {
             "X-User-ID": user?.id || "",
@@ -32,6 +32,7 @@ const FileUploadComponent: React.FC = () => {
     const el = document.createElement("input");
     el.setAttribute("type", "file");
     el.setAttribute("accept", "application/pdf");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     el.addEventListener("change", async (ev) => {
       if (el.files && el.files.length > 0) {
         const file = el.files.item(0);
@@ -39,7 +40,7 @@ const FileUploadComponent: React.FC = () => {
           const formData = new FormData();
           formData.append("pdf", file);
 
-          await fetch("http://localhost:5000/upload/pdf", {
+          await fetch(`${process.env.BACKEND_URL}/upload/pdf`, {
             method: "POST",
             body: formData,
             headers: {
