@@ -35,7 +35,7 @@ const ChatComponent: React.FC = () => {
     setMessage("");
 
     const res = await fetch(
-      `${process.env.BACKEND_URL}/chat?message=${message}`,
+      `http://localhost:5000/chat?message=${message}`,
       {
         headers: {
           "X-User-ID": user?.id || "",

@@ -1,72 +1,86 @@
-version: "3.8"
+# version: "3.8"
+
+# services:
+#   # Backend API server
+#   api:
+#     image: vedankiscool/askyourpdf-api:latest
+#     container_name: askyourpdf-api
+#     ports:
+#       - "5000:5000"
+#     volumes:
+#       - ./server/uploads:/app/uploads
+#     env_file:
+#       - ./server/.env
+#     command: ["node", "app.js"]
+#     depends_on:
+#       - mongo
+#       - redis
+#       - qdrant
+
+#   # Worker running in same server image but different command
+#   worker:
+#     image: vedankiscool/askyourpdf-worker:latest
+#     container_name: askyourpdf-worker
+#     env_file:
+#       - ./server/.env
+#     volumes:
+#       - ./server/uploads:/app/uploads
+#     command: ["node", "worker.js"]
+#     depends_on:
+#       - mongo
+#       - redis
+#       - qdrant
+
+#   # Frontend Next.js client
+#   client:
+#     image: vedankiscool/askyourpdf-client:latest
+#     container_name: askyourpdf-client
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - PORT=3000
+#     depends_on:
+#       - api
+
+#   # Redis for BullMQ queue
+#   redis:
+#     image: redis:7-alpine
+#     container_name: askyourpdf-redis
+#     ports:
+#       - "6379:6379"
+
+#   # MongoDB for storing PDFs data
+#   mongo:
+#     image: mongo:6
+#     container_name: askyourpdf-mongo
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongo_data:/data/db
+
+#   # Qdrant vector search engine
+#   qdrant:
+#     image: qdrant/qdrant:latest
+#     container_name: askyourpdf-qdrant
+#     ports:
+#       - "6333:6333"
+#     volumes:
+#       - qdrant_storage:/qdrant/storage
+
+# volumes:
+#   mongo_data:
+#   qdrant_storage:
+
+version: '3.8'
 
 services:
-  # Backend API server
-  api:
-    image: vedankiscool/askyourpdf-api:latest
-    container_name: askyourpdf-api
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./server/uploads:/app/uploads
-    env_file:
-      - ./server/.env
-    command: ["node", "app.js"]
-    depends_on:
-      - mongo
-      - redis
-      - qdrant
-
-  # Worker running in same server image but different command
-  worker:
-    image: vedankiscool/askyourpdf-worker:latest
-    container_name: askyourpdf-worker
-    env_file:
-      - ./server/.env
-    volumes:
-      - ./server/uploads:/app/uploads
-    command: ["node", "worker.js"]
-    depends_on:
-      - mongo
-      - redis
-      - qdrant
-
-  # Frontend Next.js client
-  client:
-    image: vedankiscool/askyourpdf-client:latest
-    container_name: askyourpdf-client
-    ports:
-      - "3000:3000"
-    environment:
-      - PORT=3000
-    depends_on:
-      - api
-
-  # Redis for BullMQ queue
   redis:
-    image: redis:7-alpine
-    container_name: askyourpdf-redis
+    image: valkey/valkey
     ports:
       - "6379:6379"
 
-  # MongoDB for storing PDFs data
-  mongo:
-    image: mongo:6
-    container_name: askyourpdf-mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-  # Qdrant vector search engine
   qdrant:
-    image: qdrant/qdrant:latest
-    container_name: askyourpdf-qdrant
+    image: qdrant/qdrant
     ports:
       - "6333:6333"
-    volumes:
-      - qdrant_storage:/qdrant/storage
 
-volumes:
-  mongo_data:
-  qdrant_storage:
