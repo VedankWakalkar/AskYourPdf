@@ -2,7 +2,7 @@
 import FileUploadComponent from "@/app/components/fileUpload";
 import ChatComponent from "@/app/components/chatComponent";
 import { useUser } from "@clerk/nextjs";
-import { SignIn } from "@clerk/clerk-react";
+import { SignIn } from "@clerk/nextjs";
 
 const Page = () => {
   const user = useUser();

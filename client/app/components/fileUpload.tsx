@@ -12,7 +12,7 @@ const FileUploadComponent: React.FC = () => {
     const fetchPDFCount = async () => {
       if (!user) return;
       try {
-        const res = await fetch(`${process.env.BACKEND_URL}/pdf/limit`, {
+        const res = await fetch(`http://localhost:5000/pdf/limit`, {
           method: "GET",
           headers: {
             "X-User-ID": user?.id || "",
@@ -40,7 +40,7 @@ const FileUploadComponent: React.FC = () => {
           const formData = new FormData();
           formData.append("pdf", file);
 
-          await fetch(`${process.env.BACKEND_URL}/upload/pdf`, {
+          await fetch(`http://localhost:5000/upload/pdf`, {
             method: "POST",
             body: formData,
             headers: {
